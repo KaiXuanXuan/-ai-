@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ai聚合</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 1300px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+      color: #333;
+    }
+
+    .input {
+      width: 65%;  /* 设置输入框宽度为100% */
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .container > div {
+      width: 45%;  /* 设置文本框宽度为45% */
+      padding: 10px;
+      margin: 10px 1%;  /* 设置外边距为10px，水平间距为2.5% */
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      display: inline;
+    }
+
+    button:hover {
+      background-color: #0056b3; /* 修改背景颜色 */
+      color: #fff; /* 修改文字颜色 */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="textInput">输入问题：</label>
+    <input class="input" type="textarea" id="textInput" placeholder="Promt" >
+    <button onclick="run_prompt()">执行prompt</button>
+    <div>
+      <h3>阿里千问 qwen-plus</h3>
+      <p><textarea id="answer-qwen" rows="12" cols="70" readonly></textarea></p>
+    </div>
+      <div>
+      <h3>百度千帆 ERNIE-4.0-8K</h3>
+      <p><textarea id="answer-ERNIE" rows="12" cols="70" readonly></textarea></p>
+    </div>
+    <div>
+      <h3>讯飞星火 SparkDesk-v3.5</h3>
+      <p><textarea id="answer-SparkDesk" rows="12" cols="70" readonly></textarea></p>
+    </div>
+      <div>
+      <h3>字节豆包 doubao-pro-128k</h3>
+      <p><textarea id="answer-doubao" rows="12" cols="70" readonly></textarea></p>
+    </div>
+      <div>
+      <h3>清华智谱 glm-4</h3>
+      <p><textarea id="answer-glm" rows="12" cols="70" readonly></textarea></p>
+    </div>
+    <div>
+      <h3>moonshot-v1-128k</h3>
+      <p><textarea id="answer-moonshot" rows="12" cols="70" readonly></textarea></p>
+    </div>
+      <div>
+      <h3>chatgpt-4o-latest</h3>
+      <p><textarea id="answer-chatgpt" rows="12" cols="70" readonly></textarea></p>
+    </div>
+      <div>
+      <h3>claude-3</h3>
+      <p><textarea id="answer-claude" rows="12" cols="70" readonly></textarea></p>
+    </div>
+    <div>
+      <h3>gemini-pro</h3>
+      <p><textarea id="answer-gemini" rows="12" cols="70" readonly></textarea></p>
+    </div>
+    <div>
+      <h3>deepseek-chat</h3>
+      <p><textarea id="answer-deepseek" rows="12" cols="70" readonly></textarea></p>
+    </div>
+  </div>
+<script>
+  current_text = document.getElementById('answer1');
+  text = "";
+  char_index = 0
+
+document.getElementById('textInput').addEventListener('keyup', function(event) {
+  if (event.key === 'Enter') {
+    run_prompt()
+  }
+});
+
+  function run_prompt() {
+    ask_model('qwen')
+    ask_model('ERNIE')
+    ask_model('SparkDesk')
+    ask_model('doubao')
+    ask_model('glm')
+    ask_model('moonshot')
+    ask_model('chatgpt')
+    ask_model('claude')
+    ask_model('claude')
+    ask_model('gemini')
+    ask_model('deepseek')
+  }
+
+  function ask_model(modelName){
+    var inputValue = document.getElementById('textInput').value;
+    document.getElementById('answer' +'-'+ modelName).value = "获取中...";
+    fetch('http://8.146.201.74:8080/' + modelName, {
+      method: 'post',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify({'prompt': inputValue})
+    }).then(response => {
+        return response.json(); // 将响应转换为JSON格式
+    }).then(data => {
+        // 在这里可以对返回的数据进行处理，比如更新页面内容等
+        document.getElementById('answer' +'-'+ modelName).value = data.content; // 假设返回的数据中有名为response的字段
+    }).catch(error => {
+        console.error('Error:', error);
+        document.getElementById('answer' +'-'+ modelName).value = '网络出错，获取失败！'
+    });
+  }
+
+</script>
+</body>
+</html>
