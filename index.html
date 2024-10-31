@@ -130,7 +130,7 @@ document.getElementById('textInput').addEventListener('keyup', function(event) {
   function ask_model(modelName){
     var inputValue = document.getElementById('textInput').value;
     document.getElementById('answer' +'-'+ modelName).value = "获取中...";
-    fetch('http://8.146.201.74:80/' + modelName, {
+    fetch('https://8.146.201.74:80/' + modelName, {
       method: 'post',
       headers: {'Content-Type': 'text/plain'},
       body: JSON.stringify({'prompt': inputValue})
